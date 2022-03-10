@@ -1,5 +1,5 @@
 import RuleProvider from 'diagram-js/lib/features/rules/RuleProvider';
-import rules from '../../../../view/customMarketing/rules';
+import rules from '../rules';
 
 /**
  * 自定义规则
