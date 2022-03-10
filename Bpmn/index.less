@@ -1,0 +1,813 @@
+@import "../../styles/theme";
+
+@bendpoint-fill-color: @base-color4;
+@bendpoint-stroke-color: @base-color4;
+@element-dragger-color: @base-color4;
+
+.bpmn-loading-container {
+  width: 100%;
+  height: 100%;
+  
+  .ezrd-loading-container {
+    width: 100%;
+    height: 100% !important;
+  }
+}
+
+.bpmn {
+  width: 100%;
+  height: 100%;
+  min-width: 1100px;
+  display: flex;
+  perspective: 0;
+  align-items: stretch;
+  background: #F6F6FA;
+
+  .bpmn-container {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    overflow: hidden;
+
+    // 画布左侧栏占位
+    .palette-container {
+      width: 300px;
+      height: 100%;
+      border: none;
+      background: #fff;
+      border-top: 1px solid #f6f6fa;
+      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.06);
+    }
+
+    .back-button {
+      position: absolute;
+      z-index: 1;
+      top: 70px;
+      left: 340px;
+      width: 79px;
+      height: 34px;
+      text-align: center;
+      vertical-align: middle;
+
+      & > img {
+        //padding-top: 10px;
+      }
+
+      & > span {
+        margin-left: 6px;
+      }
+    }
+
+    // 画布实体容器
+    .canvas-container {
+      min-width: 780px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      margin-left: 20px;
+      box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.06);
+
+      .canvas-container-header {
+        display: flex;
+        flex-wrap: nowrap;
+        line-height: 32px;
+        padding: 0 20px;
+        background: #f9f9fe;
+        align-content: center;
+        font-size: 14px;
+        color: #333531;
+        overflow-x: auto;
+        box-sizing: border-box;
+        border-top: 1px solid #f9f9fe;
+        border-bottom: 1px solid #f9f9fe;
+
+        & > div {
+          margin-top: 10px;
+          display: flex;
+          flex-wrap: nowrap;
+          white-space: nowrap;
+
+          &:last-child {
+            margin-bottom: 10px;
+          }
+
+          .name-input {
+            margin-left: 10px;
+          }
+
+          .activity-time-label {
+            margin-left: 20px;
+          }
+
+          .activity-time-range-picker {
+            margin-left: 10px;
+          }
+
+          .tip {
+            font-size: 14px;
+            color: #999999;
+            margin-left: 10px;
+          }
+        }
+
+        .ezrd-input-addon-after {
+          background-color: #fff;
+        }
+      }
+
+      .bpmn-canvas {
+        flex: 1;
+        position: relative;
+        overflow: auto;
+
+        .bjs-container {
+          //隐藏logo
+          .bjs-powered-by {
+            visibility: hidden;
+          }
+
+          .djs-container {
+
+            // 左侧栏
+            .djs-palette {
+              position: fixed;
+              top: 0;
+              left: 0;
+              bottom: 0;
+              width: 300px;
+              border: none;
+              overflow-y: auto;
+              background: #fff;
+
+              &-entries {
+                flex: 1;
+                display: flex;
+                padding: 10px 0;
+                flex-direction: column;
+
+                .group {
+                  flex: 1;
+                  display: flex;
+                  flex-wrap: wrap;
+                  margin-bottom: 5px;
+
+                  // 事件标题
+                  .text-custom {
+                    width: 100%;
+                    height: 40px;
+                    display: flex;
+                    color: #333531;
+                    font-size: 14px;
+                    font-weight: 700;
+                    padding: 0 20px;
+                    margin-bottom: 5px;
+                    align-items: center;
+                    pointer-events: none;
+                  }
+
+                  // 事件图标
+                  .icon-custom {
+                    @marinTextBtm: 6px;
+                    @textHeight: 17px;
+                    @marginBottom: 15px;
+
+                    position: relative;
+                    width: 52px;
+                    height: 52px;
+                    cursor: move;
+                    margin-left: 34px;
+                    margin-right: 2px;
+                    margin-bottom: @marinTextBtm + @textHeight + @marginBottom;
+                    background-size: 100% 100%;
+                    background-repeat: no-repeat;
+                    // background-size: 50% 50%;
+                    // background-position: center;
+
+                    &::after {
+                      position: absolute;
+                      width: 70px;
+                      right: 0;
+                      left: 50%;
+                      bottom: -@marinTextBtm;
+                      color: #333;
+                      font-size: 12px;
+                      line-height: @textHeight;
+                      text-align: center;
+                      pointer-events: none;
+                      white-space: nowrap;
+                      transform: translate(-50%, @textHeight);
+                    }
+                  }
+
+                  // 开始事件icon-默认背景色
+                  // &[data-group="Trigger"] {
+                  //   .icon-custom {
+                  //     border-radius: 50%;
+                  //     background-color: #e8e4ff;
+                  //   }
+                  // }
+                  // // 活动事件icon-默认背景色
+                  // &[data-group="Executor"] {
+                  //   .icon-custom {
+                  //     border-radius: 5px;
+                  //     background-color: #ddfaf4;
+                  //   }
+                  // }
+                  // // 判断条件icon-默认背景色
+                  // &[data-group="Judge"] {
+                  //   .icon-custom::before {
+                  //     content: '';
+                  //     position: absolute;
+                  //     top: 0;
+                  //     left: 0;
+                  //     width: 100%;
+                  //     height: 100%;
+                  //     z-index: -1;
+                  //     background-size: 100% 100%;
+                  //     background-repeat: no-repeat;
+                  //     background-image: url(https://assets-img.ezrpro.com/pc/icon/crm/cdp_customs_judge_back.png);
+                  //     // 塑形-六边形（产品需求变更了，背景写死不需要配置）
+                  //     // clip-path: polygon(23% 5%, 77% 5%, 100% 50%, 77% 95%, 23% 95%, 0% 50%, 23% 5%);
+                  //   }
+                  // }
+
+                  // // 开始事件
+                  // .start-text {
+                  //   &::after {
+                  //     content: '开始事件';
+                  //   }
+                  // }
+
+                  // // 公众号
+                  // .official-account-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/cdp-official-account-icon2.png');
+
+                  //   &::after {
+                  //     content: '公众号';
+                  //   }
+                  // }
+
+                  // // 小程序
+                  // .mini-programs-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/cdp-mini-programs-icon.png');
+
+                  //   &::after {
+                  //     content: '小程序';
+                  //   }
+                  // }
+
+                  // // 活动事件
+                  // .activity-text {
+                  //   &::after {
+                  //     content: '活动事件';
+                  //   }
+                  // }
+
+                  // // 发送消息
+                  // .send-message-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/send-message-icon.png');
+
+                  //   &::after {
+                  //     content: '发送消息';
+                  //   }
+                  // }
+
+                  // // 送优惠券
+                  // .send-coupons-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/send-coupons-icon.png');
+
+                  //   &::after {
+                  //     content: '送优惠券';
+                  //   }
+                  // }
+
+                  // // 送券包
+                  // .send-coupon-bag-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/send-coupon-bag-icon.png');
+
+                  //   &::after {
+                  //     content: '送券包';
+                  //   }
+                  // }
+
+                  // // 延时器
+                  // .delay-device-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/delay-device-icon.png');
+
+                  //   &::after {
+                  //     content: '延时器';
+                  //   }
+                  // }
+
+                  // // 发短信
+                  // .send-sms-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/send-sms-icon.png');
+
+                  //   &::after {
+                  //     content: '发短信';
+                  //   }
+                  // }
+
+                  // // AI外呼
+                  // .ai-outbound-call-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/ai-outbound-call-icon.png');
+
+                  //   &::after {
+                  //     content: 'AI外呼';
+                  //   }
+                  // }
+
+                  // // 打标签
+                  // .hit-label-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/hit-label-icon.png');
+
+                  //   &::after {
+                  //     content: '打标签';
+                  //   }
+                  // }
+
+                  // // 发积分
+                  // .send-integral-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/send-integral-icon.png');
+
+                  //   &::after {
+                  //     content: '发积分';
+                  //   }
+                  // }
+
+                  // // 页面发券
+                  // .page-coupon-issuance-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/page-coupon-issuance-icon.png');
+
+                  //   &::after {
+                  //     content: '页面发券';
+                  //   }
+                  // }
+
+                  // // 判断条件
+                  // .judge-text {
+                  //   &::after {
+                  //     content: '判断条件';
+                  //   }
+                  // }
+
+                  // // 用户属性
+                  // .user-attribute-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/user-attribute-icon.png');
+
+                  //   &::after {
+                  //     content: '用户属性';
+                  //   }
+                  // }
+
+                  // // 订单属性
+                  // .order-properties-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/order-properties-icon.png');
+
+                  //   &::after {
+                  //     content: '订单属性';
+                  //   }
+                  // }
+
+                  // // 事件判断
+                  // .event-judgment-icon {
+                  //   background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/event-judgment-icon.png');
+
+                  //   &::after {
+                  //     content: '事件判断';
+                  //   }
+                  // }
+                }
+              }
+            }
+
+            // 画布内容区
+            .viewport {
+              .djs-shape,
+              .djs-connection {
+                touch-action: none;
+              }
+
+              .djs-segment-dragger,
+              .djs-bendpoint {
+                display: none;
+              }
+
+              .djs-segment-dragger {
+                .djs-visual {
+                  display: none;
+                  opacity: 0.6;
+                  fill: @bendpoint-fill-color;
+                  stroke: @bendpoint-stroke-color;
+                  stroke-width: 1px;
+                  stroke-opacity: 1;
+                }
+
+                &:hover {
+                  .djs-visual {
+                    display: block;
+                  }
+                }
+
+                &.horizontal {
+                  .djs-hit {
+                    cursor: ns-resize;
+                  }
+                }
+
+                &.vertical {
+                  .djs-hit {
+                    cursor: ew-resize;
+                  }
+                }
+
+                &.djs-dragging {
+                  .djs-hit {
+                    pointer-events: none;
+                  }
+                }
+              }
+
+              .djs-bendpoint {
+                .djs-visual {
+                  fill: @bendpoint-fill-color;
+                  stroke: @bendpoint-stroke-color;
+                  stroke-width: 1px;
+                  opacity: 0.6;
+                }
+
+                &.floating {
+                  .djs-hit {
+                    pointer-events: none;
+                  }
+                }
+              }
+
+              .djs-segment-dragger:hover,
+              .djs-bendpoints.hover .djs-segment-dragger,
+              .djs-bendpoints.selected .djs-segment-dragger,
+              .djs-bendpoint:hover,
+              .djs-bendpoints.hover .djs-bendpoint,
+              .djs-bendpoints.selected .djs-bendpoint {
+                display: block;
+              }
+
+              .djs-drag-active {
+                .djs-bendpoints {
+                  * {
+                    display: none;
+                  }
+                }
+
+                .djs-element {
+                  & > .djs-hit-click-stroke {
+                    pointer-events: all;
+                  }
+                }
+              }
+
+              .djs-bendpoints {
+                &:not(.hover) {
+                  .floating {
+                    display: none;
+                  }
+                }
+              }
+
+              .djs-segment-dragger:hover .djs-visual,
+              .djs-segment-dragger.djs-dragging .djs-visual,
+              .djs-bendpoint:hover .djs-visual,
+              .djs-bendpoint.floating .djs-visual {
+                fill: @bendpoint-fill-color;
+                stroke: @bendpoint-stroke-color;
+                stroke-opacity: 0.8;
+              }
+
+              .djs-segment-dragger .djs-hit,
+              .djs-bendpoint .djs-hit {
+                fill: none;
+                pointer-events: all;
+              }
+
+              .djs-updating,
+              .djs-updating > * {
+                pointer-events: none !important;
+              }
+
+              .djs-updating .djs-context-pad,
+              .djs-updating .djs-outline,
+              .djs-updating .djs-bendpoint,
+              .connect-ok .djs-bendpoint,
+              .connect-not-ok .djs-bendpoint,
+              .drop-ok .djs-bendpoint,
+              .drop-not-ok .djs-bendpoint {
+                display: none !important;
+              }
+
+              .djs-segment-dragger.djs-dragging,
+              .djs-bendpoint.djs-dragging {
+                display: block;
+                opacity: 1.0;
+              }
+
+              /**
+               * drag styles
+               */
+
+              .djs-dragger {
+                * {
+                  fill: none !important;
+                  stroke: @element-dragger-color !important;
+                }
+              }
+
+              .djs-dragger tspan,
+              .djs-dragger text {
+                fill: @element-dragger-color !important;
+                stroke: none !important;
+              }
+
+              marker.djs-dragger circle,
+              marker.djs-dragger path,
+              marker.djs-dragger polygon,
+              marker.djs-dragger polyline,
+              marker.djs-dragger rect {
+                fill: @element-dragger-color !important;
+                stroke: none !important;
+              }
+
+              marker.djs-dragger text,
+              marker.djs-dragger tspan {
+                fill: none !important;
+                stroke: @element-dragger-color !important;
+              }
+
+              .djs-dragging {
+                opacity: 0.3;
+              }
+
+              .djs-dragging,
+              .djs-dragging > * {
+                pointer-events: none !important;
+              }
+
+              .djs-dragging .djs-context-pad,
+              .djs-dragging .djs-outline {
+                display: none !important;
+              }
+
+              /**
+               * no pointer events for visual
+               */
+
+              .djs-visual,
+              .djs-outline {
+                pointer-events: none;
+              }
+
+              .djs-element {
+                &.attach-ok {
+                  .djs-hit {
+                    stroke-width: 60px !important;
+                  }
+                }
+
+                & > .djs-hit-all {
+                  pointer-events: all;
+                }
+              }
+
+              /**
+               * all pointer events for hit shape
+               */
+
+              .djs-element > .djs-hit-stroke,
+              .djs-element > .djs-hit-click-stroke {
+                pointer-events: stroke;
+              }
+
+              /**
+               * all pointer events for hit shape
+               */
+              /**
+               * shape / connection basic styles
+               */
+
+              .djs-connection {
+                .djs-visual {
+                  stroke-width: 2px;
+                  fill: none;
+                }
+              }
+
+              .djs-cursor-grab {
+                cursor: grab;
+              }
+
+              .djs-cursor-grabbing {
+                cursor: grabbing;
+              }
+
+              .djs-cursor-crosshair {
+                cursor: crosshair;
+              }
+
+              .djs-cursor-move {
+                cursor: move;
+              }
+
+              .djs-cursor-resize-ns {
+                cursor: ns-resize;
+              }
+
+              .djs-cursor-resize-ew {
+                cursor: ew-resize;
+              }
+
+              /**
+               * hidden styles
+               */
+
+              .djs-element-hidden,
+              .djs-element-hidden .djs-hit,
+              .djs-element-hidden .djs-outline,
+              .djs-label-hidden .djs-label {
+                //display: none !important;
+                display: block !important;
+              }
+
+              // 元素节点
+              .djs-shape {
+                cursor: move;
+
+                // hover
+                &:hover {
+                  .djs-outline {
+                    stroke-dasharray: 5px;
+                    stroke: @base-color3 !important;
+                    stroke-linecap: square;
+                  }
+                }
+
+                // 选中效果
+                &.selected {
+                  .djs-outline {
+                    stroke: @base-color3;
+                    stroke-width: 2px !important;
+                    stroke-linecap: square;
+                    stroke-dasharray: none;
+                  }
+                }
+              }
+
+              .layer-base {
+
+                //选中的连线颜色处理
+                .djs-connection {
+                  &.selected {
+                    .djs-outline {
+                      stroke-dasharray: 5px;
+                      stroke: @base-color3 !important
+                    }
+                  }
+                }
+              }
+            }
+
+            // 覆盖区
+            .djs-overlay-container {
+
+              // contextPad区
+              .djs-context-pad {
+
+                .icon-pad {
+                  position: absolute;
+                  width: 20px;
+                  height: 20px;
+                  cursor: pointer;
+                  background-size: 100% 100%;
+                }
+
+                // 删除
+                .icon-delete-pad {
+                  top: -25px;
+                  left: -125px;
+
+                  background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/custorm-delete.png');
+
+                  &:hover {
+                    background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/custorm-delete-hover.png');
+                  }
+                }
+
+                // 设置
+                .icon-setting-pad {
+                  top: -25px;
+                  right: 0;
+                  background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/custorm-setting.png');
+
+                  &:hover {
+                    background-size: 100% 100%;
+                    background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/custorm-setting-hover.png');
+                  }
+                }
+
+                // 连线
+                .icon-connection-pad {
+                  top: 50px;
+                  left: 0;
+                  background-image: url('https://assets-img.ezrpro.com/pc/img/others/custorm-line.png');
+
+                  &:hover {
+                    background-size: 100% 100%;
+                    background-image: url('https://assets-img.ezrpro.com/pc/icon/crm/custorm-line-hover.png');
+                  }
+                }
+
+                //
+                .icon-custom-connect-yes {
+                  display: block;
+                  background: url(https://assets-img.ezrpro.com/pc/img/others/custorm-yes.png);
+                  width: 49px;
+                  height: 49px;
+                  position: absolute;
+                  top: 11px;
+                  right: -56px;
+                  z-index: 1;
+                  background-size: contain;
+                  cursor: pointer;
+                }
+
+                .icon-custom-connect-no {
+                  display: block;
+                  background: url(https://assets-img.ezrpro.com/pc/img/others/custorm-no.png);
+                  width: 49px;
+                  height: 49px;
+                  position: absolute;
+                  top: 62px;
+                  right: -56px;
+                  z-index: 1;
+                  background-size: contain;
+                  cursor: pointer;
+                }
+              }
+            }
+
+            // 拖拽透明度
+            .djs-dragging {
+              opacity: 0.3;
+            }
+
+            //拖拽控制事件
+            .djs-dragging,
+            .djs-dragging > * {
+              pointer-events: none !important;
+            }
+
+            // 隐藏bpmn input搜索框
+            .djs-search-container {
+              display: none;
+            }
+
+            // 小地图
+            .djs-minimap {
+              .toggle {
+                &:before {
+                  content: '小地图';
+                }
+              }
+
+              &.open {
+                .toggle {
+                  &:before {
+                    content: '关闭';
+                  }
+                }
+              }
+
+              .viewport-dom {
+                border: solid 2px @base-color3 !important;
+              }
+            }
+
+            //双击出现输入框
+            .djs-direct-editing-parent {
+              display: none;
+              width: 0;
+              height: 0
+            }
+          }
+        }
+
+        .activity-default-flow {
+          position: absolute;
+          top: 70px;
+          left: 0;
+          z-index: 1;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}
